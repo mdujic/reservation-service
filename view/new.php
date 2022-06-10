@@ -17,9 +17,6 @@
 	Povratak na <a href="<?php echo __SITE_URL . '/index.php?rt=login'?>">login</a>.
 </p>
 
-<p>
-	Povratak na <a href="<?php echo __SITE_URL . '/index.php?rt=users'?>">popis svih korisnika</a>.
-</p>
 
 
 <?php require_once __SITE_PATH . '/view/_footer.php'; ?>
