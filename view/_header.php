@@ -17,6 +17,7 @@
 	
 	<ul>
 		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=users">Users</a></li>
+		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=lectures">Lectures</a></li>
 		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=logout">Logout</a></li>
 	</ul>
 
