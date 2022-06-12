@@ -3,7 +3,8 @@
 <head>
 	<meta charset="utf8">
 	<title>Reservation Service</title>
-	<link rel="stylesheet" href="<?php echo __SITE_URL;?>/css/style.css?v=<?php echo time(); ?>">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+	<link rel="stylesheet" href="<?php echo __SITE_URL;?>/css/styleTable.css?v=<?php echo time(); ?>">
 </head>
 <body>
 	<div style="padding: 1em;

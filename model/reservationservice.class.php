@@ -102,6 +102,44 @@ class ReservationService
 
 		return $arr;
 	}
+
+	function getAllClassrooms( )
+	{
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'SELECT DISTINCT prostorija FROM project_lectures' );
+			$st->execute();
+		}
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+		$arr = array();
+		while( $row = $st->fetch() )
+		{
+			$arr[] =  $row['prostorija'];
+		}
+
+		return $arr;
+	}
+
+	function getAllReservationsOfClassroom( $classroom_name)
+	{
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'SELECT * FROM project_lectures WHERE prostorija=:prostorija_name' );
+			$st->execute( array( 'prostorija_name' => $classroom_name ) );
+		}
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+		$arr = array();
+		while( $row = $st->fetch() )
+		{
+			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'] );
+		}
+
+		return $arr;
+	}
 };
 
 ?>

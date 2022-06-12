@@ -22,7 +22,6 @@ class LoginController extends BaseController
 			// Dakle dobro je korisničko ime. 
 			// Provjeri taj korisnik postoji u bazi; dohvati njegove ostale podatke.
 			$user = $rs->getUserByUsername( $_POST['username'] );
-
 			if( $user === null )
 			{
 				$this->registry->template->title = 'User with that name doesn\'t exist.';
