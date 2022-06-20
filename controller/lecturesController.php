@@ -15,6 +15,11 @@ class LecturesController extends BaseController
         $this->registry->template->show( 'lectures_index' );
 	}
 
+	public function addLecture()
+	{
+		
+	}
+
 
 }; 
 

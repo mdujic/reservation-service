@@ -117,6 +117,8 @@
 </table>
 
 <div id = "unos_u_tablicu" style = "width: 300px; height: 300px; float: right; position: absolute">
+    <form action="<?php echo __SITE_URL . '/index.php?rt=lectures/addLecture'?>" method="post">
+    </form>
 </div>
 <script>
 
@@ -182,8 +184,8 @@
     }
     function forma_za_unos()
     {
-        var html_tekst = $('<label for="ime">Ime: </label><input id="ime" name="ime" type="text" /></br><label for="predmet">Predmet: </label><input id="predmet" name="predmet" type="text" />');
-        var button_unesi = $('</br><button onclick="unesi()">Unesi u raspored!</button>')
+        var html_tekst = $('<label for="predmet">Predmet: </label><input id="predmet" name="predmet" type="text" />');
+        var button_unesi = $('</br><button >Unesi u raspored!</button>')
         html_tekst.appendTo('#unos_u_tablicu');
         button_unesi.appendTo('#unos_u_tablicu');
     }

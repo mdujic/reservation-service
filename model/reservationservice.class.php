@@ -140,6 +140,19 @@ class ReservationService
 
 		return $arr;
 	}
+
+	//nije provjereno
+	function createReservation($lecture)
+	{
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'INSERT INTO project_lectures(ime_profesora, prezime_profesora, kolegij, vrsta, dan, sati, prostorija) VALUES (:ime, :prezime, :kolegij, :vrsta, :dan, :sati, :prostorija)' );
+
+			$st->execute( array('ime' => $lecture->ime_profesora, 'prezime' =>$lecture->prezime_profesora ,'kolegij' => $lecture ->kolegij, 'vrsta' => $lecture -> vrsta, 'dan' => $lecture -> dan, 'sati' => $lecture -> sati, 'prostorija' => $lecture -> prostorija) );
+		}
+		catch( PDOException $e ) { exit( "PDO error [project_lectures]: " . $e->getMessage() ); }
+	}
 };
 
 ?>
