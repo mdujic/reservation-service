@@ -15,7 +15,7 @@
             <th>PET</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id = "tablebody">
         <tr>
             <th class='first'>8-9</th>
             <th id='PON-8'></th>
@@ -115,32 +115,86 @@
 
     </tbody>
 </table>
+
+<div id = "unos_u_tablicu" style = "width: 300px; height: 300px; float: right; position: absolute">
+</div>
 <script>
+
+    var test = <?php echo json_encode($lectures); ?>;
+    var broj_sivih = 0;
+    var field_id = []; 
+    fillStartingTable(test);
+    
     
     $( document ).ready( function()
-        {
-            var test = <?php echo json_encode($lectures); ?>;
-            
-            for(let i = 0; i < test.length; i++) {
-               
-                console.log(test[i].dan, test[i].sati)
-                let pocetak = parseInt(test[i].sati.split('-')[0])
-                let kraj = parseInt(test[i].sati.split('-')[1])
-                let razlika = kraj - pocetak;
-                for(let j = pocetak; j<kraj; ++j){
-                    if (j == pocetak){
-                        $('#' + test[i].dan + '-' + j)
-                        .html(test[i].ime +'<br>' + test[i].kolegij);
-                        $('#' + test[i].dan + '-' + j)
-                        .attr('rowspan', razlika);
-                    } else {
-                        $('#' + test[i].dan + '-' + j).remove();
+    {
+        //za dodavanje u raspored
+        $( "#tablebody" ).on("mousedown","th", function(event)
+            {
+                console.log("Ulazim ", broj_sivih, field_id);
+                if( event.button === 0 && $(this).text() ==='')
+                {
+                    console.log("Ulazim ovdje");
+                    var color = $( this ).css( "background-color" );
+                    console.log(color);
+                    if(color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)')
+                    {
+                        console.log("Sada sam tu");
+                        $(this).css("background-color", 'gray');
+                        broj_sivih++;
+                        field_id.push($(this).attr('id'));
+                        if(broj_sivih === 1)
+                            forma_za_unos();
+
+                    }
+                    else
+                    {
+                        $(this).css("background-color", 'white');
+                        broj_sivih--;
+                        field_id = arrayRemove(field_id, $(this).attr('id'));
+                        if(broj_sivih === 0)
+                            $('#unos_u_tablicu').empty();
                     }
                 }
-                
-            }   
+            });
             
-        })
+            
+    });
+
+    function fillStartingTable(test)
+    {
+        for(let i = 0; i < test.length; i++) {
+            console.log(test[i].dan, test[i].sati)
+            let pocetak = parseInt(test[i].sati.split('-')[0])
+            let kraj = parseInt(test[i].sati.split('-')[1])
+            let razlika = kraj - pocetak;
+            for(let j = pocetak; j<kraj; ++j){
+                if (j == pocetak){
+                    $('#' + test[i].dan + '-' + j)
+                    .html(test[i].ime +'<br>' + test[i].kolegij);
+                    $('#' + test[i].dan + '-' + j)
+                    .attr('rowspan', razlika);
+                } else {
+                    $('#' + test[i].dan + '-' + j).remove();
+                }
+            }
+        }
+    }
+    function forma_za_unos()
+    {
+        var html_tekst = $('<label for="ime">Ime: </label><input id="ime" name="ime" type="text" /></br><label for="predmet">Predmet: </label><input id="predmet" name="predmet" type="text" />');
+        var button_unesi = $('</br><button onclick="unesi()">Unesi u raspored!</button>')
+        html_tekst.appendTo('#unos_u_tablicu');
+        button_unesi.appendTo('#unos_u_tablicu');
+    }
+
+
+    function arrayRemove(arr, value) { 
+        return arr.filter(function(ele){ 
+            return ele != value; 
+    });
+}
+    
         
 </script>
 
