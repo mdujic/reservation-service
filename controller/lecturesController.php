@@ -24,7 +24,7 @@ class LecturesController extends BaseController
 		
 		$lectures = [];
 		$zapamtiTip = "";
-		if(isset($_GET['subject']))
+		if(strlen($_GET['subject'])> 0)
 		{
 			foreach($termini as $termin)
 			{
@@ -81,21 +81,12 @@ class LecturesController extends BaseController
 	{
 
 		$classroom = $_GET['classroom'];
-		print("Printam classroom: ".$classroom);
 		$termini = explode(",",$_GET['termini']);
-		print("termini");
-		print($_GET['termini']);
-		print_r($termini);
-		print("Sada sam prije petlje");
 		foreach($termini as $termin)
 		{
-			print("Ulazim u petlju");
 			$parts = explode( '-', $termin );
-			print("Ovo su argumenti: ".$parts[0]." ".$parts[1]." ".$classroom);
 			$rs = new ReservationService();
-
 			$rs -> deleteReservation($parts[0], $parts[1], $classroom);
-			print("Poslije brisanja");
 		}
 
 		header('Location: index.php?rt=classrooms/showById&id_classroom='.$_GET['classroom']);
