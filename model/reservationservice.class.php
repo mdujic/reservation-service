@@ -16,7 +16,7 @@ class ReservationService
 		if( $row === false )
 			return null;
 		else
-			return new User( $row['id'], $row['username'], $row['password_hash'], $row['email'], $row['registration_sequence'], $row['has_registered'] );
+			return new User( $row['id'],$row['name'], $row['surname'], $row['username'], $row['password_hash'], $row['email'], $row['registration_sequence'], $row['has_registered'], $row['role'] );
 	}
 
     function getUserByUsername( $username )
@@ -33,7 +33,7 @@ class ReservationService
 		if( $row === false )
 			return null;
 		else
-			return new User( $row['id'], $row['username'], $row['password_hash'], $row['email'], $row['registration_sequence'], $row['has_registered'] );
+			return new User( $row['id'],$row['name'], $row['surname'], $row['username'], $row['password_hash'], $row['email'], $row['registration_sequence'], $row['has_registered'], $row['role']  );
 	}
 
 	function getUserByRegSeq( $reg_seq )
@@ -78,7 +78,7 @@ class ReservationService
 		$arr = array();
 		while( $row = $st->fetch() )
 		{
-			$arr[] = new User( $row['id'], $row['username'], $row['password_hash'], $row['email'], $row['registration_sequence'], $row['has_registered'] );
+			$arr[] = new User( $row['id'],$row['name'], $row['surname'], $row['username'], $row['password_hash'], $row['email'], $row['registration_sequence'], $row['has_registered'], $row['role']  );
 		}
 
 		return $arr;
@@ -141,7 +141,6 @@ class ReservationService
 		return $arr;
 	}
 
-	//nije provjereno
 	function createReservation($lecture)
 	{
 		try
@@ -151,7 +150,20 @@ class ReservationService
 
 			$st->execute( array('ime' => $lecture->ime_profesora, 'prezime' =>$lecture->prezime_profesora ,'kolegij' => $lecture ->kolegij, 'vrsta' => $lecture -> vrsta, 'dan' => $lecture -> dan, 'sati' => $lecture -> sati, 'prostorija' => $lecture -> prostorija) );
 		}
-		catch( PDOException $e ) { exit( "PDO error [project_lectures]: " . $e->getMessage() ); }
+		catch( PDOException $e ) {  exit( "PDO error [project_lectures]: " . $e->getMessage() ); }
+	}
+
+	function deleteReservation($day, $start, $classroom)
+	{
+		try
+		{
+			$db = DB::getConnection();
+			$start = $start.'-';
+			$st = $db->prepare( "DELETE FROM project_lectures WHERE prostorija=:pr AND dan=:d AND sati LIKE '$start%'" );
+
+			$st->execute( array('pr' => $classroom, 'd' =>$day ) );
+		}
+		catch( PDOException $e ) {  exit( "PDO error [project_lectures]: " . $e->getMessage() ); }
 	}
 };
 

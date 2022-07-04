@@ -32,15 +32,19 @@
     </tbody>
 </table>
 
-<div id = "unos_u_tablicu" style = "width: 300px; height: 300px; float: right; position: absolute">
-    <form action="<?php echo __SITE_URL . '/index.php?rt=lectures/addLecture'?>" method="post">
-    </form>
+<div id = "unos_u_tablicu" >
+
+</div>
+<div id = "unos_za_brisanje" >
+
 </div>
 <script>
 
     var test = <?php echo json_encode($lectures); ?>;
     var broj_sivih = 0;
-    var field_id = []; 
+    var field_id = [];
+    var broj_crvenih = 0;
+    var redfield_id = []
     fillStartingTable(test);
     
     
@@ -50,7 +54,7 @@
         $( "#tablebody" ).on("mousedown","th", function(event)
             {
                 console.log("Ulazim ", broj_sivih, field_id);
-                if( event.button === 0 && $(this).text() ==='')
+                if( event.button === 0 && $(this).text() ==='' && broj_crvenih === 0)
                 {
                     console.log("Ulazim ovdje");
                     var color = $( this ).css( "background-color" );
@@ -74,10 +78,54 @@
                             $('#unos_u_tablicu').empty();
                     }
                 }
+                else if(event.button === 0 && $(this).text() !=='' && broj_sivih === 0)
+                {
+                    var id = $(this).attr('id');
+                    console.log("Ovo je za crveni: ");
+                    console.log(id);
+                    if(checkAppointment(id))
+                    {
+                        console.log("Ulazim ovdje");
+                        var color = $( this ).css( "background-color" );
+                        if(color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)')
+                        {
+                            $(this).css("background-color", 'red');
+                            broj_crvenih++;
+                            redfield_id.push($(this).attr('id'));
+                            if(broj_crvenih === 1)
+                                forma_za_brisanje();
+                        }
+                        else
+                        {
+                            $(this).css("background-color", 'white');
+                            broj_crvenih--;
+                            redfield_id = arrayRemove(redfield_id, $(this).attr('id'));
+                            if(broj_crvenih === 0)
+                                $('#unos_za_brisanje').empty();
+                        }
+                    }
+                    
+                }
             });
             
             
     });
+
+    function checkAppointment(id)
+    {
+        for(let i = 0; i < test.length; i++)
+        {
+            var pocetak = parseInt(test[i].sati.split('-')[0])
+            var dan = test[i].dan;
+            var id_dan = id.split('-')[0];
+            var id_sat = parseInt(id.split('-')[1]);
+            var ime = <?php echo json_encode($name); ?>;
+            var prezime = <?php echo json_encode($surname); ?>;
+            if(id_dan === dan && id_sat === pocetak && test[i].ime === ime && test[i].prezime === prezime )
+                return true;
+        }
+        return false;
+    }
 
     function fillStartingTable(test)
     {
@@ -101,9 +149,28 @@
     function forma_za_unos()
     {
         var html_tekst = $('<label for="predmet">Predmet: </label><input id="predmet" name="predmet" type="text" />');
-        var button_unesi = $('</br><button >Unesi u raspored!</button>')
+        var radio = $('</br><input type="radio" name="odabir" id="predavanja" value="predavanja" checked>Predavanja</input></br><input type="radio" name="odabir" id="vjezbe" value="vjezbe" >Vježbe</input>');
+        var button_unesi = $('</br><button onclick=sendDataToPhp()>Unesi u raspored!</button>');
         html_tekst.appendTo('#unos_u_tablicu');
+        radio.appendTo('#unos_u_tablicu');
         button_unesi.appendTo('#unos_u_tablicu');
+    }
+    function forma_za_brisanje()
+    {
+        var button_unesi = $('</br><button onclick=sendDataToClear()>Izbrisi iz rasporeda!</button>');
+        button_unesi.appendTo('#unos_za_brisanje');
+    }
+
+    function sendDataToPhp()
+    {
+        var src = "index.php?rt=lectures/addLecture&termini="+field_id+"&subject="+$('#predmet').val()+"&tip="+$('[name="odabir"]:checked').val()+"&classroom="+<?php echo json_encode($title); ?>;
+        window.location.href=src;
+    }
+
+    function sendDataToClear()
+    {
+        var src = "index.php?rt=lectures/removeLecture&termini="+redfield_id+"&classroom="+<?php echo json_encode($title); ?>;
+        window.location.href=src;
     }
 
 

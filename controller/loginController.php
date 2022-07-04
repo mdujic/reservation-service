@@ -41,6 +41,10 @@ class LoginController extends BaseController
 			{
 				// Sad je valjda sve OK. Ulogiraj ga.
 				$_SESSION['username'] = $_POST['username'];
+				$_SESSION['name'] = $user -> name;
+				$_SESSION['surname'] = $user -> surname;
+
+
 				$this->registry->template->title = 'You have successfully logged in.';
 				$this->registry->template->show( 'logged_in' );
 			}

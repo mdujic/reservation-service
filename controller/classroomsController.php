@@ -22,6 +22,10 @@ class ClassroomsController extends BaseController
 		    // Popuni template potrebnim podacima
 		    $this->registry->template->title = $_GET['id_classroom'];
 		    $this->registry->template->brojac = 0;
+		    $this->registry->template->name = $_SESSION['name'];
+		    $this->registry->template->surname = $_SESSION['surname'];
+
+
 		    $lecturesList = $rs->getAllReservationsOfClassroom($_GET['id_classroom']);
             $toJavaScript = array();
 
