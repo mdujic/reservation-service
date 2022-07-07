@@ -2,9 +2,9 @@
 
 class Lecture
 {
-	protected $ime_profesora, $prezime_profesora, $kolegij, $vrsta, $dan, $sati, $prostorija;
+	protected $id, $ime_profesora, $prezime_profesora, $kolegij, $vrsta, $dan, $sati, $prostorija;
 
-	function __construct( $ime_profesora, $prezime_profesora, $kolegij, $vrsta, $dan, $sati, $prostorija )
+	function __construct( $ime_profesora, $prezime_profesora, $kolegij, $vrsta, $dan, $sati, $prostorija, $id=-1)
 	{
 		$this->ime_profesora = $ime_profesora;
 		$this->prezime_profesora = $prezime_profesora;
@@ -13,6 +13,7 @@ class Lecture
         $this->dan = $dan;
         $this->sati = $sati;
         $this->prostorija = $prostorija;
+		$this->id = $id;
 	}
 
 	function __get( $prop ) { return $this->$prop; }
