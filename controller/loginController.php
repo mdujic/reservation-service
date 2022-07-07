@@ -43,6 +43,7 @@ class LoginController extends BaseController
 				$_SESSION['username'] = $_POST['username'];
 				$_SESSION['name'] = $user -> name;
 				$_SESSION['surname'] = $user -> surname;
+				$_SESSION['role'] = $user -> role;
 
 
 				$this->registry->template->title = 'You have successfully logged in.';

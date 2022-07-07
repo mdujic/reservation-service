@@ -44,24 +44,33 @@
     var broj_sivih = 0;
     var field_id = [];
     var broj_crvenih = 0;
-    var redfield_id = []
+    var redfield_id = [];
     fillStartingTable(test);
-    
     
     $( document ).ready( function()
     {
+        var role = <?php echo json_encode($_SESSION['role'])?>;
+        var classroom = <?php echo json_encode($title)?>;
         //za dodavanje u raspored
         $( "#tablebody" ).on("mousedown","th", function(event)
             {
-                console.log("Ulazim ", broj_sivih, field_id);
+                if(role === 'student')
+                    return; //student je read-only tip
+                if((role === 'demos' || role === 'gl_demos') && (classroom[0] != 'P' || classroom[1] != 'R')){
+                    return;
+                    //demos ne moze mijenjati prostorije koje nisu praktikumi
+                }
+
+                //console.log("moj role je ", role);
+                //console.log("Ulazim ", broj_sivih, field_id);
                 if( event.button === 0 && $(this).text() ==='' && broj_crvenih === 0)
                 {
                     console.log("Ulazim ovdje");
                     var color = $( this ).css( "background-color" );
-                    console.log(color);
+                    //console.log(color);
                     if(color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)')
                     {
-                        console.log("Sada sam tu");
+                        //console.log("Sada sam tu");
                         $(this).css("background-color", 'gray');
                         broj_sivih++;
                         field_id.push($(this).attr('id'));
@@ -83,7 +92,13 @@
                     var id = $(this).attr('id');
                     console.log("Ovo je za crveni: ");
                     console.log(id);
-                    if(checkAppointment(id))
+                    var relax = '';
+                    if(role === 'gl_demos')
+                        relax = 'gl_demos';
+                    else if(role === 'satnicar')
+                        relax = 'satnicar';
+
+                    if(checkAppointment(id, relax))
                     {
                         console.log("Ulazim ovdje");
                         var color = $( this ).css( "background-color" );
@@ -111,7 +126,7 @@
             
     });
 
-    function checkAppointment(id)
+    function checkAppointment(id, relax)
     {
         for(let i = 0; i < test.length; i++)
         {
@@ -121,7 +136,16 @@
             var id_sat = parseInt(id.split('-')[1]);
             var ime = <?php echo json_encode($name); ?>;
             var prezime = <?php echo json_encode($surname); ?>;
-            if(id_dan === dan && id_sat === pocetak && test[i].ime === ime && test[i].prezime === prezime )
+            var flag = false;
+            if(relax === 'satnicar')
+                flag = true;
+            else if(relax === 'gl_demos' && test[i].vrsta === 'dem'){
+                flag = true;
+            }
+            //if(i == 0){
+            //    console.log('vrsta je ', test[i].vrsta);
+            //}
+            if(id_dan === dan && id_sat === pocetak && (flag || (test[i].ime === ime && test[i].prezime === prezime)) )
                 return true;
         }
         return false;

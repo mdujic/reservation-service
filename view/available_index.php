@@ -28,7 +28,7 @@ do
   padding: 20px;
   margin: 5px;" v-for="termin in termini">{{ termin.ime }}</div>
     </div>
-    <p v-for="opomena">{{ opomena }}</p>
+    <p v-model="opomena">{{ opomena }}</p>
     <br />
 </div>
 
@@ -48,10 +48,10 @@ new Vue({
   	change: function() {
       this.termini.splice(0);
       this.opomena = "";
-      if(this.start >= this.end){
+      if(this.start >= this.end ){
         this.opomena = "Početak mora biti prije kraja!"
       }
-      else {
+      else if(this.day != ""){
         var zauzete = [];
         var slobodne = [];
 
