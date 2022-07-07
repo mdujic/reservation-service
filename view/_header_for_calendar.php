@@ -6,6 +6,7 @@
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.2/vue.min.js'></script>
 	<script src='https://unpkg.com/v-calendar@2.4.1/lib/v-calendar.umd.min.js'></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 	<link rel="stylesheet" href="<?php echo __SITE_URL;?>/css/styleTable.css?v=<?php echo time(); ?>">
 </head>
 <body>
