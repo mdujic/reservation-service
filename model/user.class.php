@@ -4,7 +4,7 @@ class User
 {
 	protected $id, $name, $surname, $username, $password_hash, $email, $registration_sequence, $has_registered, $role;
 
-	function __construct( $id, $name, $surname, $username, $password_hash, $email, $registration_sequence, $has_registered )
+	function __construct( $id, $name, $surname, $username, $password_hash, $email, $registration_sequence, $has_registered, $role )
 	{
 		$this->id = $id;
 		$this->name = $name;

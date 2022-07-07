@@ -165,6 +165,47 @@ class ReservationService
 		}
 		catch( PDOException $e ) {  exit( "PDO error [project_lectures]: " . $e->getMessage() ); }
 	}
+
+	function makeNewUser( $username, $password, $email, $reg_seq, $role, $name, $surname )
+	{
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'INSERT INTO project_users(username, password_hash, email, registration_sequence, has_registered, role, name, surname) VALUES ' .
+								'(:username, :password_hash, :email, :registration_sequence, 0, :role, :name, :surname)' );
+			
+			$st->execute( array( 'username' => $username, 
+								'password_hash' => password_hash( $password, PASSWORD_DEFAULT ), 
+								'email' => $email, 
+								'registration_sequence'  => $reg_seq,
+								'role'  => $role,
+								'name' => $name,
+								'surname' => $surname ) );
+		}
+		catch( PDOException $e ) { exit( 'Greška u bazi: ' . $e->getMessage() ); }
+	}
+
+	function getAllReservationsForUser( $username )
+	{
+		$user = $this->getUserByUsername($username);
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'SELECT * FROM project_lectures 
+								 WHERE ime_profesora=:name AND prezime_profesora=:surname'
+								  );
+			$st->execute( array( 'name' => $user->name, 'surname' => $user->surname ) );
+		}
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+		$arr = array();
+		while( $row = $st->fetch() )
+		{
+			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'] );
+		}
+
+		return $arr;
+	}
 };
 
 ?>

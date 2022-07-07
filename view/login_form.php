@@ -14,4 +14,8 @@
 	Ako nemate korisnički račun, otvorite ga <a href="<?php echo __SITE_URL . '/index.php?rt=register'?>">ovdje</a>.
 </p>
 
+<a href="<?php echo __SITE_URL . '/index.php?rt=microsoft'?>">Prijavite se sa službenim mailom.</a>
+
+
+
 <?php require_once __SITE_PATH . '/view/_footer.php'; ?>
