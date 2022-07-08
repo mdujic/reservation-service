@@ -21,8 +21,8 @@ do
     <br />
     Popis slobodnih prostorija u traženom terminu ( morate izabrati dan i vrijeme):
     <br />
-    <div style="display:flex; flex-wrap: wrap;">
-      <div style="background-color: lightgrey;
+    <div id="zadravec" style="display:flex; flex-wrap: wrap;">
+      <div @click="test(termin.ime)" class="title" id="classroom" style="background-color: lightgrey;
   width: 30px;
   border: 5px solid green;
   padding: 20px;
@@ -30,10 +30,23 @@ do
     </div>
     <p v-model="opomena">{{ opomena }}</p>
     <br />
+    <div id="hahah">
+      TEst
+</div>
 </div>
 
 <script>
-
+  var dan = ''
+  var od = ''
+  var doKad = ''
+//http://localhost/index.php?rt=classrooms/showById&id_classroom=PR3
+//http://localhost/~matija/reservation-service/index.php?rt=classrooms/showById&id_classroom=PR3
+function test(x){
+  console.log("Ovo je proradilo", x)
+  console.log("ide sad ovo:", dan, od, doKad)
+  var src = "index.php?rt=classrooms/showById&id_classroom=" + x + "&dan=" + dan + "&od=" + od + "&do=" + doKad;
+  window.location.href=src;
+}
 
 new Vue({
   el: "#app",
@@ -54,7 +67,9 @@ new Vue({
       else if(this.day != ""){
         var zauzete = [];
         var slobodne = [];
-
+        dan = this.day
+        od = this.start
+        doKad = this.end
         // one koje su s drugih fakulteta zabranimo
         var zabranjene = ["GF", "F08", "MPZ", "KO"];
 
@@ -92,6 +107,7 @@ new Vue({
         }     
           //this.poslovi.push( { ime: $( "#txt" ).val(), obavljen: false } );
       }
+      
     }
   }
 })
