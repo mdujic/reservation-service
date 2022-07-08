@@ -10,8 +10,12 @@ class LecturesController extends BaseController
 
 		// Popuni template potrebnim podacima
 		$this->registry->template->title = 'Popis svih predavanja';
-		$this->registry->template->lecturesList = $rs->getAllLectures();
-
+		$tmp = [];
+		if($_SESSION['role'] === 'djelatnik')
+			$tmp = $rs -> getLecturesOfProfessor($_SESSION['name'], $_SESSION['surname']);
+		else if($_SESSION['role'] === 'satnicar')
+			$tmp = $rs -> getAllLectures();
+		$this->registry->template->lecturesList = $tmp;
         $this->registry->template->show( 'lectures_index' );
 	}
 

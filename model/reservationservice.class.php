@@ -103,6 +103,25 @@ class ReservationService
 		return $arr;
 	}
 
+	function getLecturesOfProfessor($name, $surname){
+		try{
+			$db = DB::getConnection();
+			$st = $db -> prepare( 'SELECT * FROM project_lectures where ime_profesora = :ime AND prezime_profesora = :prez' );
+			$st->execute(array('ime_profesora' => $name, 'prezime_profesora' => $surname));
+		}
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+		$arr = array();
+		while($row = $st->fetch())
+		{
+			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'], $row['id'], $row['datum'] );
+		}
+
+		return $arr;
+	}
+
+
+
 	function getAllClassrooms( )
 	{
 		try
