@@ -11,7 +11,7 @@
     background-color: #43424d;
     overflow: hidden;
     color: white;">
-		<h1 style="float:left">Reservacije prostorija (PMF - MO)</h1>
+		<h1 style="float:left">Rezervacije prostorija (PMF - MO)</h1>
 		<h2 style="float:right">Pozdrav, <?php echo $_SESSION['username']; ?>!</h2>
 	</div>
 	
