@@ -19,7 +19,9 @@ do
        min="09:00" max="20:00" @change="change()" required>
     
     <br />
-    Popis slobodnih prostorija u traženom terminu ( morate izabrati dan i vrijeme):
+    Popis slobodnih 
+    <?php if($_SESSION['role'] === 'demos' || $_SESSION['role'] === 'gl_demos') echo 'praktikuma'; else echo 'prostorija';?>
+    u traženom terminu ( morate izabrati dan i vrijeme):
     <br />
     <div id="zadravec" style="display:flex; flex-wrap: wrap;">
       <div @click="test(termin.ime)" class="title" id="classroom" style="background-color: lightgrey;
