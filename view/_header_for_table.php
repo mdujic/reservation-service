@@ -20,14 +20,18 @@
 		<?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'satnicar')
 			echo '<li><a href="' . __SITE_URL . '/index.php?rt=users">Korisnici</a></li>';
 		?>
-		<?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'satnicar' || $_SESSION['role'] === 'djelatnik')
+		<?php if(isset($_SESSION['role']) && ($_SESSION['role'] === 'satnicar' || $_SESSION['role'] === 'djelatnik'))
 			echo '<li><a href="' . __SITE_URL . '/index.php?rt=lectures">Kolegiji</a></li>';
 		?>
 		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=classrooms">Rasporedi po prostorijama</a></li>
-		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=available">Dostupne prostorije</a></li>
+		<?php 
+			$avail = array('demos', 'gl_demos', 'djelatnik', 'satnicar');
+			if(isset($_SESSION['role']) && in_array($_SESSION['role'], $avail))
+				echo '<li><a href="' . __SITE_URL . '/index.php?rt=available">Dostupne prostorije</a></li>';
+		?>
 		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=calendar">Kalendar</a></li>
 		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=logout">Odjava</a></li>
 	</ul>
-
+	
 	<h2><?php echo $title; ?></h2>
 	
