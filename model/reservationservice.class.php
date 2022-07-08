@@ -97,7 +97,7 @@ class ReservationService
 		$arr = array();
 		while( $row = $st->fetch() )
 		{
-			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'], $row['id'] );
+			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'], $row['id'], $row['datum'] );
 		}
 
 		return $arr;
@@ -135,7 +135,7 @@ class ReservationService
 		$arr = array();
 		while( $row = $st->fetch() )
 		{
-			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'] );
+			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'], $row['id'], $row['datum'] );
 		}
 
 		return $arr;
@@ -201,7 +201,7 @@ class ReservationService
 		$arr = array();
 		while( $row = $st->fetch() )
 		{
-			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'] );
+			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'], $row['id'], $row['datum'] );
 		}
 
 		return $arr;

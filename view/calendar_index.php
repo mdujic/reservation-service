@@ -213,34 +213,23 @@ new Vue({
         $count = 0;
         foreach( $lecturesList as $lecture ) {
           $count++;
-          ?>
+          $s = $lecture->datum;
+          $niz = explode(";", $s);
+          foreach( $niz as $datum){
+            $par = explode(".", $datum);
+            $dan = intval($par[0]);
+            $mjesec = intval($par[1]);
+            ?>
         {
           key: <?php echo $count;?>,
           customData: {
             title: "<?php echo $lecture->kolegij . " " . $lecture->sati . " " . $lecture->prostorija; ?>",
             class: "<?php echo $colors[ $count ] . " text-white"; ?>"
           },
-          dates: new Date(year, month, <?php 
-            switch ($lecture->dan) {
-              case "PON":
-                  echo 4;
-                  break;
-              case "UTO":
-                    echo 5;
-                    break;
-              case "SRI":
-                    echo 6;
-                    break;
-              case "ČET":
-                    echo 7;
-                    break;
-              case "PET":
-                    echo 8;
-                    break;
-          }
-          ?>)
+          dates: new Date(year, <?php echo $mjesec-1;?>, <?php echo $dan; ?>)
         },
         <?php
+          }
         }
         ?>
       ],
