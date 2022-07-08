@@ -46,6 +46,7 @@
     var field_id = [];
     var broj_crvenih = 0;
     var redfield_id = [];
+    var sivi_dan = '';
     
 
     fillStartingTable(test);
@@ -63,6 +64,8 @@
     console.log('#' + dan + '-' + odKad);
     for(let i =odKad; i < doKad; ++i){
         $('#' + dan + '-' + i).css("background-color", 'gray');
+        broj_sivih++;
+        sivi_dan = dan;
         field_id.push(dan + '-' + i)
     }
     forma_za_unos()
@@ -73,7 +76,7 @@
     
     $( document ).ready( function()
     {
-        var sivi_dan = '';
+        
         var role = <?php echo json_encode($_SESSION['role'])?>;
         var classroom = <?php echo json_encode($title)?>;
         //za dodavanje u raspored

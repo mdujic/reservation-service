@@ -31,7 +31,6 @@ do
     <p v-model="opomena">{{ opomena }}</p>
     <br />
     <div id="hahah">
-      TEst
 </div>
 </div>
 
@@ -120,12 +119,17 @@ new Vue({
 	<?php 
 		foreach( $reservationsArray as $classroomReservations )
 		{
-            foreach($classroomReservations as $reservation)
-			echo '<tr>' .
-			        '<td>' . $reservation->dan . '</td>
-              <td>' . $reservation->sati . '</td>
-              <td>' . $reservation->prostorija . '</td>' .
-			     '</tr>';
+            foreach($classroomReservations as $reservation){
+               $t = ($reservation -> prostorija)[0] . ($reservation -> prostorija)[1];
+			         if(($_SESSION['role'] === 'demos' || $_SESSION['role'] === 'gl_demos') && $t !== 'PR')
+                continue;
+
+               echo '<tr>' .
+			          '<td>' . $reservation->dan . '</td>
+                 <td>' . $reservation->sati . '</td>
+                 <td>' . $reservation->prostorija . '</td>' .
+			           '</tr>';
+         }
 		}
 	?>
 </table>
