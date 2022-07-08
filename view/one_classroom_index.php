@@ -38,14 +38,36 @@
 <div id = "unos_za_brisanje" >
 
 </div>
-<script>
 
+<script>
+    
     var test = <?php echo json_encode($lectures); ?>;
     var broj_sivih = 0;
     var field_id = [];
     var broj_crvenih = 0;
     var redfield_id = [];
     fillStartingTable(test);
+
+    var dan = ''
+    var odKad = ''
+    var doKad = ''
+    <?php
+        if(isset($dan)) { ?>
+    dan = <?php echo json_encode($dan); ?>;
+    odKad = <?php echo json_encode($od); ?>;
+    doKad = <?php echo json_encode($do); ?>;
+    odKad = odKad.toString().split(':')[0]
+    doKad = doKad.toString().split(':')[0]
+    console.log('#' + dan + '-' + odKad);
+    for(let i =odKad; i < doKad; ++i){
+        $('#' + dan + '-' + i).css("background-color", 'gray');
+        field_id.push(dan + '-' + i)
+    }
+    forma_za_unos()
+    <?php
+        }
+        ?>
+    console.log(dan, odKad, doKad)
     
     $( document ).ready( function()
     {
@@ -161,7 +183,7 @@
             for(let j = pocetak; j<kraj; ++j){
                 if (j == pocetak){
                     $('#' + test[i].dan + '-' + j)
-                    .html(test[i].ime +'<br>' + test[i].kolegij);
+                    .html(test[i].prezime +'<br>' + test[i].kolegij);
                     $('#' + test[i].dan + '-' + j)
                     .attr('rowspan', razlika);
                 } else {
