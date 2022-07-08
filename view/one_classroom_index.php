@@ -46,6 +46,8 @@
     var field_id = [];
     var broj_crvenih = 0;
     var redfield_id = [];
+    
+
     fillStartingTable(test);
 
     var dan = ''
@@ -71,11 +73,13 @@
     
     $( document ).ready( function()
     {
+        var sivi_dan = '';
         var role = <?php echo json_encode($_SESSION['role'])?>;
         var classroom = <?php echo json_encode($title)?>;
         //za dodavanje u raspored
         $( "#tablebody" ).on("mousedown","th", function(event)
             {
+                //console.log("id je ", $(this).attr('id'));
                 if(role === 'student')
                     return; //student je read-only tip
                 if((role === 'demos' || role === 'gl_demos') && (classroom[0] != 'P' || classroom[1] != 'R')){
@@ -87,27 +91,35 @@
                 //console.log("Ulazim ", broj_sivih, field_id);
                 if( event.button === 0 && $(this).text() ==='' && broj_crvenih === 0)
                 {
-                    console.log("Ulazim ovdje");
+                    let sad = $(this).attr('id');
+                    //console.log("Ulazim ovdje");
                     var color = $( this ).css( "background-color" );
                     //console.log(color);
-                    if(color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)')
+                    let d = sad[0] + sad[1] + sad[2];
+                    console.log("sad je ", d, " a sivi dan je " , sivi_dan);
+                    console.log("broj sivih je ", broj_sivih);
+                    if((sivi_dan === '' || sivi_dan === d) && (color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)'))
                     {
                         //console.log("Sada sam tu");
                         $(this).css("background-color", 'gray');
                         broj_sivih++;
                         field_id.push($(this).attr('id'));
-                        dan = $(this).attr('id').split('-')[0]
-                        if(broj_sivih === 1)
+                        dan = $(this).attr('id').split('-')[0];
+                        if(broj_sivih === 1){
+                            sivi_dan = d;
                             forma_za_unos();
+                        }
 
                     }
-                    else
+                    else if(broj_sivih > 0 && !(color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)'))
                     {
                         $(this).css("background-color", 'white');
                         broj_sivih--;
                         field_id = arrayRemove(field_id, $(this).attr('id'));
-                        if(broj_sivih === 0)
+                        if(broj_sivih === 0){
+                            sivi_dan = '';
                             $('#unos_u_tablicu').empty();
+                        }
                     }
                 }
                 else if(event.button === 0 && $(this).text() !=='' && broj_sivih === 0)
