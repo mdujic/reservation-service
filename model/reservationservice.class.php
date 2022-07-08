@@ -166,41 +166,45 @@ class ReservationService
 		{
 			$db = DB::getConnection();
 			$st = $db->prepare( 'INSERT INTO project_lectures(ime_profesora, prezime_profesora, kolegij, vrsta, dan, sati, prostorija, datum) VALUES (:ime, :prezime, :kolegij, :vrsta, :dan, :sati, :prostorija, :datum)' );
-			$date = explode("/", date('d/m', time()));
-			$today_day = date('w');
-			$reservation_day = -1;
-			$new_date = intval($date[0]);
-			switch($lecture->dan){
-				case 'PON':
-					$reservation_day = 1;
-					break;
-				case 'UTO':
-					$reservation_day = 2;
-					break;
-				case 'SRI':
-					$reservation_day = 3;
-					break;
-				case 'ČET':
-					$reservation_day = 4;
-					break;
-				case 'PET':
-					$reservation_day = 5;
-					break;
+			if($lecture->datum === ""){
+				$date = explode("/", date('d/m', time()));
+				$today_day = date('w');
+				$reservation_day = -1;
+				$new_date = intval($date[0]);
+				switch($lecture->dan){
+					case 'PON':
+						$reservation_day = 1;
+						break;
+					case 'UTO':
+						$reservation_day = 2;
+						break;
+					case 'SRI':
+						$reservation_day = 3;
+						break;
+					case 'ČET':
+						$reservation_day = 4;
+						break;
+					case 'PET':
+						$reservation_day = 5;
+						break;
+				}
+				if ($reservation_day > $today_day) {
+					$new_date += $reservation_day - $today_day;
+				} else if ($today_day > $reservation_day){
+					$new_date += 7-($today_day-$reservation_day);
+				}
+				$final = '';
+				if ($new_date === intval($date[0])){
+					$final = date('d.m', time());
+				} else if ($new_date - 10 < 0) {
+					$final = '0' . $new_date . "." . $date[1];
+				}else {
+					$final = $new_date . "." . $date[1];
+				}
+				$final .= ';';
+			} else {
+				$final = $lecture->datum . ';';
 			}
-			if ($reservation_day > $today_day) {
-				$new_date += $reservation_day - $today_day;
-			} else if ($today_day > $reservation_day){
-				$new_date += 7-($today_day-$reservation_day);
-			}
-			$final = '';
-			if ($new_date === intval($date[0])){
-				$final = date('d.m', time());
-			} else if ($new_date - 10 < 0) {
-				$final = '0' . $new_date . "." . $date[1];
-			}else {
-				$final = $new_date . "." . $date[1];
-			}
-			$final .= ';';
 			#echo $final;
 			$st->execute( array('ime' => $lecture->ime_profesora, 'prezime' =>$lecture->prezime_profesora ,'kolegij' => $lecture ->kolegij, 'vrsta' => $lecture -> vrsta, 'dan' => $lecture -> dan, 'sati' => $lecture -> sati, 'prostorija' => $lecture -> prostorija, 'datum' => $final) );
 		}

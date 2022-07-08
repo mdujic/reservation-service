@@ -70,7 +70,7 @@ class LecturesController extends BaseController
 						$zapamtiTip = "V";
 						$tip = "1V";
 					}
-					$datum = "";
+					$datum = $_GET['datum'];
 					$id = 100;
 					$lecture = new Lecture($user->name, $user->surname, $_GET['subject'], $tip, $parts[0], $sati, $_GET['classroom'], $id, $datum);
 					array_push($lectures, $lecture);

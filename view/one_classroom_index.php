@@ -96,6 +96,7 @@
                         $(this).css("background-color", 'gray');
                         broj_sivih++;
                         field_id.push($(this).attr('id'));
+                        dan = $(this).attr('id').split('-')[0]
                         if(broj_sivih === 1)
                             forma_za_unos();
 
@@ -192,14 +193,80 @@
             }
         }
     }
+
+    function format_date(day, month) {
+        let final = '';
+		if (day - 10 < 0) {
+			final = '0' + day + ".";
+		}else {
+			final = day + ".";
+		}
+        if(month-10 < 0){
+            final += '0' + month;
+        }else{
+            final += month
+        }
+        return final;
+    }
+
+    function dodaj_sve_datume() {
+        const d = new Date();
+        const today_day = d.getDay();
+        const today_date = [d.getUTCDate(), d.getUTCMonth() + 1];
+		var reservation_day = -1;
+		var new_date = parseInt(today_date[0]);
+		switch(dan){
+			case 'PON':
+				reservation_day = 1;
+				break;
+			case 'UTO':
+				reservation_day = 2;
+				break;
+			case 'SRI':
+				reservation_day = 3;
+				break;
+			case 'ČET':
+				reservation_day = 4;
+				break;
+			case 'PET':
+				reservation_day = 5;
+				break;
+		}
+		if (reservation_day > today_day) {
+			new_date += reservation_day - today_day;
+		} else if (today_day > reservation_day){
+			new_date += 7-(today_day-reservation_day);
+		}
+        datumi =  []
+        let day = new_date;
+        let month = today_date[1];
+        let duzi_mjesec = true;
+        for(let i = 0; i < 15; ++i) {
+            let broj_dana = 30;
+            if (duzi_mjesec) broj_dana++;
+            if(day - broj_dana > 0){
+                day -= broj_dana;
+                if(duzi_mjesec && month != 7) duzi_mjesec = false
+                else duzi_mjesec = true
+                month++;
+            }
+            let dann = $('</br><option value="' + format_date(day, month) + '">' + format_date(day, month) + '</option>');
+            dann.appendTo('#datumi');
+            day += 7;
+        }
+    }
+
     function forma_za_unos()
     {
         var html_tekst = $('<label for="predmet">Predmet: </label><input id="predmet" name="predmet" type="text" />');
         var radio = $('</br><input type="radio" name="odabir" id="predavanja" value="predavanja" checked>Predavanja</input></br><input type="radio" name="odabir" id="vjezbe" value="vjezbe" >Vježbe</input>');
+        var datum = $('<select id="datumi"></select>')
         var button_unesi = $('</br><button onclick=sendDataToPhp()>Unesi u raspored!</button>');
         html_tekst.appendTo('#unos_u_tablicu');
         radio.appendTo('#unos_u_tablicu');
+        datum.appendTo('#unos_u_tablicu')
         button_unesi.appendTo('#unos_u_tablicu');
+        dodaj_sve_datume()
     }
     function forma_za_brisanje()
     {
@@ -209,7 +276,7 @@
 
     function sendDataToPhp()
     {
-        var src = "index.php?rt=lectures/addLecture&termini="+field_id+"&subject="+$('#predmet').val()+"&tip="+$('[name="odabir"]:checked').val()+"&classroom="+<?php echo json_encode($title); ?>;
+        var src = "index.php?rt=lectures/addLecture&termini="+field_id+"&subject="+$('#predmet').val()+"&tip="+$('[name="odabir"]:checked').val() + "&datum=" + $('#datumi option:selected').text() +"&classroom=" +<?php echo json_encode($title); ?>;
         window.location.href=src;
     }
 
