@@ -107,7 +107,7 @@ class ReservationService
 		try{
 			$db = DB::getConnection();
 			$st = $db -> prepare( 'SELECT * FROM project_lectures where ime_profesora = :ime AND prezime_profesora = :prez' );
-			$st->execute(array('ime_profesora' => $name, 'prezime_profesora' => $surname));
+			$st->execute(array('ime' => $name, 'prez' => $surname));
 		}
 		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
 
