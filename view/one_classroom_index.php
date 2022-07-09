@@ -38,22 +38,51 @@
 <div id = "unos_za_brisanje" >
 
 </div>
-<script>
 
+<script>
+    
     var test = <?php echo json_encode($lectures); ?>;
     var broj_sivih = 0;
     var field_id = [];
     var broj_crvenih = 0;
     var redfield_id = [];
+    var sivi_dan = '';
+    
+
     fillStartingTable(test);
+
+    var dan = ''
+    var odKad = ''
+    var doKad = ''
+    <?php
+        if(isset($dan)) { ?>
+    dan = <?php echo json_encode($dan); ?>;
+    odKad = <?php echo json_encode($od); ?>;
+    doKad = <?php echo json_encode($do); ?>;
+    odKad = odKad.toString().split(':')[0]
+    doKad = doKad.toString().split(':')[0]
+    console.log('#' + dan + '-' + odKad);
+    for(let i =odKad; i < doKad; ++i){
+        $('#' + dan + '-' + i).css("background-color", 'gray');
+        broj_sivih++;
+        sivi_dan = dan;
+        field_id.push(dan + '-' + i)
+    }
+    forma_za_unos()
+    <?php
+        }
+        ?>
+    console.log(dan, odKad, doKad)
     
     $( document ).ready( function()
     {
+        
         var role = <?php echo json_encode($_SESSION['role'])?>;
         var classroom = <?php echo json_encode($title)?>;
         //za dodavanje u raspored
         $( "#tablebody" ).on("mousedown","th", function(event)
             {
+                //console.log("id je ", $(this).attr('id'));
                 if(role === 'student')
                     return; //student je read-only tip
                 if((role === 'demos' || role === 'gl_demos') && (classroom[0] != 'P' || classroom[1] != 'R')){
@@ -65,26 +94,35 @@
                 //console.log("Ulazim ", broj_sivih, field_id);
                 if( event.button === 0 && $(this).text() ==='' && broj_crvenih === 0)
                 {
-                    console.log("Ulazim ovdje");
+                    let sad = $(this).attr('id');
+                    //console.log("Ulazim ovdje");
                     var color = $( this ).css( "background-color" );
                     //console.log(color);
-                    if(color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)')
+                    let d = sad[0] + sad[1] + sad[2];
+                    console.log("sad je ", d, " a sivi dan je " , sivi_dan);
+                    console.log("broj sivih je ", broj_sivih);
+                    if((sivi_dan === '' || sivi_dan === d) && (color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)'))
                     {
                         //console.log("Sada sam tu");
                         $(this).css("background-color", 'gray');
                         broj_sivih++;
                         field_id.push($(this).attr('id'));
-                        if(broj_sivih === 1)
+                        dan = $(this).attr('id').split('-')[0];
+                        if(broj_sivih === 1){
+                            sivi_dan = d;
                             forma_za_unos();
+                        }
 
                     }
-                    else
+                    else if(broj_sivih > 0 && !(color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)'))
                     {
                         $(this).css("background-color", 'white');
                         broj_sivih--;
                         field_id = arrayRemove(field_id, $(this).attr('id'));
-                        if(broj_sivih === 0)
+                        if(broj_sivih === 0){
+                            sivi_dan = '';
                             $('#unos_u_tablicu').empty();
+                        }
                     }
                 }
                 else if(event.button === 0 && $(this).text() !=='' && broj_sivih === 0)
@@ -161,7 +199,7 @@
             for(let j = pocetak; j<kraj; ++j){
                 if (j == pocetak){
                     $('#' + test[i].dan + '-' + j)
-                    .html(test[i].ime +'<br>' + test[i].kolegij);
+                    .html(test[i].prezime +'<br>' + test[i].kolegij);
                     $('#' + test[i].dan + '-' + j)
                     .attr('rowspan', razlika);
                 } else {
@@ -170,14 +208,91 @@
             }
         }
     }
+
+    function format_date(day, month) {
+        let final = '';
+		if (day - 10 < 0) {
+			final = '0' + day + ".";
+		}else {
+			final = day + ".";
+		}
+        if(month-10 < 0){
+            final += '0' + month;
+        }else{
+            final += month
+        }
+        return final;
+    }
+
+    function dodaj_sve_datume() {
+        const d = new Date();
+        const today_day = d.getDay();
+        const today_date = [d.getUTCDate(), d.getUTCMonth() + 1];
+		var reservation_day = -1;
+		var new_date = parseInt(today_date[0]);
+		switch(dan){
+			case 'PON':
+				reservation_day = 1;
+				break;
+			case 'UTO':
+				reservation_day = 2;
+				break;
+			case 'SRI':
+				reservation_day = 3;
+				break;
+			case 'ČET':
+				reservation_day = 4;
+				break;
+			case 'PET':
+				reservation_day = 5;
+				break;
+		}
+		if (reservation_day > today_day) {
+			new_date += reservation_day - today_day;
+		} else if (today_day > reservation_day){
+			new_date += 7-(today_day-reservation_day);
+		}
+        datumi =  []
+        let day = new_date;
+        let month = today_date[1];
+        let duzi_mjesec = true;
+        for(let i = 0; i < 15; ++i) {
+            let broj_dana = 30;
+            if (duzi_mjesec) broj_dana++;
+            if(day - broj_dana > 0){
+                day -= broj_dana;
+                if(duzi_mjesec && month != 7) duzi_mjesec = false
+                else duzi_mjesec = true
+                month++;
+            }
+            let dann = $('</br><option value="' + format_date(day, month) + ';">' + format_date(day, month) + ';</option>');
+            dann.appendTo('#datumi');
+            day += 7;
+        }
+    }
+
     function forma_za_unos()
     {
-        var html_tekst = $('<label for="predmet">Predmet: </label><input id="predmet" name="predmet" type="text" />');
-        var radio = $('</br><input type="radio" name="odabir" id="predavanja" value="predavanja" checked>Predavanja</input></br><input type="radio" name="odabir" id="vjezbe" value="vjezbe" >Vježbe</input>');
+        var html_tekst = $('<label for="predmet">Predmet: </label><input id="predmet" name="predmet" type="text" /></br>');
+        var demosi = '</br><input type="radio" name="odabir" id="dem" value="dem" checked >Demonstrature</input></br>';
+        var djelatnici = '<input type="radio" name="odabir" id="predavanja" value="predavanja" checked>Predavanja</input></br><input type="radio" name="odabir" id="vjezbe" value="vjezbe" >Vježbe</input></br><input type="radio" name="odabir" id="sem" value="sem">Seminar</input></br><input type="radio" name="odabir" id="ost" value="ost">Ostalo</input>';
+        var satnicar = demosi + djelatnici;
+        var get_role = <?php echo json_encode($_SESSION['role']);?>;
+        var cr = '';
+        if(get_role == 'demos' || get_role == 'gl_demos')
+            cr = demosi;
+        else if(get_role == 'satnicar') 
+            cr = satnicar;
+        else cr = djelatnici;
+        console.log('cr = ', cr);
+        var radio = $(cr);
+        var datum = $('</br><label for="datumi">Odaberi datum rezervacije (drži Ctrl za više odabira): <select id="datumi" multiple></select>');
         var button_unesi = $('</br><button onclick=sendDataToPhp()>Unesi u raspored!</button>');
         html_tekst.appendTo('#unos_u_tablicu');
         radio.appendTo('#unos_u_tablicu');
+        datum.appendTo('#unos_u_tablicu')
         button_unesi.appendTo('#unos_u_tablicu');
+        dodaj_sve_datume();
     }
     function forma_za_brisanje()
     {
@@ -187,7 +302,7 @@
 
     function sendDataToPhp()
     {
-        var src = "index.php?rt=lectures/addLecture&termini="+field_id+"&subject="+$('#predmet').val()+"&tip="+$('[name="odabir"]:checked').val()+"&classroom="+<?php echo json_encode($title); ?>;
+        var src = "index.php?rt=lectures/addLecture&termini="+field_id+"&subject="+$('#predmet').val()+"&tip="+$('[name="odabir"]:checked').val() + "&datum=" + $('#datumi option:selected').text() +"&classroom=" +<?php echo json_encode($title); ?>;
         window.location.href=src;
     }
 

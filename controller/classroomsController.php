@@ -21,6 +21,12 @@ class ClassroomsController extends BaseController
             $rs = new ReservationService();
 		    // Popuni template potrebnim podacima
 		    $this->registry->template->title = $_GET['id_classroom'];
+            if (isset($_GET['dan'])) {
+                $this->registry->template->dan = $_GET['dan'];
+                $this->registry->template->od = $_GET['od'];
+                $this->registry->template->do = $_GET['do'];
+            }
+		    
 		    $this->registry->template->brojac = 0;
 		    $this->registry->template->name = $_SESSION['name'];
 		    $this->registry->template->surname = $_SESSION['surname'];

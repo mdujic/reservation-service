@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf8">
-	<title>Reservation Service</title>
+	<title>Rezervacije prostorija (PMF - MO)</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 	<link rel="stylesheet" href="<?php echo __SITE_URL;?>/css/styleTable.css?v=<?php echo time(); ?>">
 </head>
@@ -12,25 +12,32 @@
     background-color: #43424d;
     overflow: hidden;
     color: white;">
-		<h1 style="float:left">Reservation Service</h1>
-		<h2 style="float:right">Hello, <?php echo $_SESSION['username']; ?>!</h2>
+		<h1 style="float:left">Rezervacije prostorija (PMF - MO)</h1>
+		<h2 style="float:right">Pozdrav, <?php echo $_SESSION['username']; ?>! Vaša uloga je: <?php echo $_SESSION['role']; ?>.</h2>
 	</div>
 	
 	<ul>
-		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=users">Users</a></li>
-		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=lectures">Lectures</a></li>
-		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=classrooms">Classrooms</a></li>
-		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=available">Available</a></li>
-		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=calendar">Calendar</a></li>
+		<?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'satnicar')
+			echo '<li><a href="' . __SITE_URL . '/index.php?rt=users">Korisnici</a></li>';
+		?>
+		<?php if(isset($_SESSION['role']) && ($_SESSION['role'] === 'satnicar' || $_SESSION['role'] === 'djelatnik'))
+			echo '<li><a href="' . __SITE_URL . '/index.php?rt=lectures">Kolegiji</a></li>';
+		?>
+		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=classrooms">Rasporedi po prostorijama</a></li>
+		<?php 
+			$avail = array('demos', 'gl_demos', 'djelatnik', 'satnicar');
+			if(isset($_SESSION['role']) && in_array($_SESSION['role'], $avail))
+				echo '<li><a href="' . __SITE_URL . '/index.php?rt=available">Dostupne prostorije</a></li>';
+		?>
+		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=calendar">Kalendar</a></li>
 		<?php
 			if($_SESSION['role'] == 'satnicar')
 			?>
-		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=schedule">New Schedule</a></li>	
+		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=schedule">Novi raspored</a></li>	
 			<?php
 		?>
-		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=logout">Logout</a></li>
-		
+		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=logout">Odjava</a></li>
 	</ul>
-
+	
 	<h2><?php echo $title; ?></h2>
 	

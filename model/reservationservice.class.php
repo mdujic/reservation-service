@@ -103,6 +103,25 @@ class ReservationService
 		return $arr;
 	}
 
+	function getLecturesOfProfessor($name, $surname){
+		try{
+			$db = DB::getConnection();
+			$st = $db -> prepare( 'SELECT * FROM project_lectures where ime_profesora = :ime AND prezime_profesora = :prez' );
+			$st->execute(array('ime' => $name, 'prez' => $surname));
+		}
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+		$arr = array();
+		while($row = $st->fetch())
+		{
+			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'], $row['id'], $row['datum'] );
+		}
+
+		return $arr;
+	}
+
+
+
 	function getAllClassrooms( )
 	{
 		try
@@ -146,8 +165,47 @@ class ReservationService
 		try
 		{
 			$db = DB::getConnection();
-			$st = $db->prepare( 'INSERT INTO project_lectures(ime_profesora, prezime_profesora, kolegij, vrsta, dan, sati, prostorija, datum) VALUES (:ime, :prezime, :kolegij, :vrsta, :dan, :sati, :prostorija, " ")' );
-			$st->execute( array('ime' => $lecture->ime_profesora, 'prezime' =>$lecture->prezime_profesora ,'kolegij' => $lecture ->kolegij, 'vrsta' => $lecture -> vrsta, 'dan' => $lecture -> dan, 'sati' => $lecture -> sati, 'prostorija' => $lecture -> prostorija) );
+			$st = $db->prepare( 'INSERT INTO project_lectures(ime_profesora, prezime_profesora, kolegij, vrsta, dan, sati, prostorija, datum) VALUES (:ime, :prezime, :kolegij, :vrsta, :dan, :sati, :prostorija, :datum)' );
+			if($lecture->datum === ""){
+				$date = explode("/", date('d/m', time()));
+				$today_day = date('w');
+				$reservation_day = -1;
+				$new_date = intval($date[0]);
+				switch($lecture->dan){
+					case 'PON':
+						$reservation_day = 1;
+						break;
+					case 'UTO':
+						$reservation_day = 2;
+						break;
+					case 'SRI':
+						$reservation_day = 3;
+						break;
+					case 'ČET':
+						$reservation_day = 4;
+						break;
+					case 'PET':
+						$reservation_day = 5;
+						break;
+				}
+				if ($reservation_day > $today_day) {
+					$new_date += $reservation_day - $today_day;
+				} else if ($today_day > $reservation_day){
+					$new_date += 7-($today_day-$reservation_day);
+				}
+				$final = '';
+				if ($new_date === intval($date[0])){
+					$final = date('d.m', time());
+				} else if ($new_date - 10 < 0) {
+					$final = '0' . $new_date . "." . $date[1];
+				}else {
+					$final = $new_date . "." . $date[1];
+				}
+			} else {
+				$final = $lecture->datum . ';';
+			}
+			#echo $final;
+			$st->execute( array('ime' => $lecture->ime_profesora, 'prezime' =>$lecture->prezime_profesora ,'kolegij' => $lecture ->kolegij, 'vrsta' => $lecture -> vrsta, 'dan' => $lecture -> dan, 'sati' => $lecture -> sati, 'prostorija' => $lecture -> prostorija, 'datum' => $final) );
 		}
 		catch( PDOException $e ) {  exit( "PDO error [project_lectures]: " . $e->getMessage() ); }
 	}
@@ -244,8 +302,9 @@ class ReservationService
 		
 	
 };
-
-
+#$rs = new ReservationService;
+#$lecture = new Lecture("Matija", "Šantek", "Proba", "1P", "PON", "12-13", "PR2", "13333", "");
+#$rs -> createReservation($lecture);
 
 ?>
 
