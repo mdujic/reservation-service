@@ -132,12 +132,12 @@ class ReservationService
 		}
 		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
 
+
 		$arr = array();
 		while( $row = $st->fetch() )
 		{
 			$arr[] = new Lecture( $row['ime_profesora'], $row['prezime_profesora'], $row['kolegij'], $row['vrsta'], $row['dan'], $row['sati'], $row['prostorija'], $row['id'], $row['datum'] );
 		}
-
 		return $arr;
 	}
 
@@ -146,8 +146,7 @@ class ReservationService
 		try
 		{
 			$db = DB::getConnection();
-			$st = $db->prepare( 'INSERT INTO project_lectures(ime_profesora, prezime_profesora, kolegij, vrsta, dan, sati, prostorija) VALUES (:ime, :prezime, :kolegij, :vrsta, :dan, :sati, :prostorija)' );
-
+			$st = $db->prepare( 'INSERT INTO project_lectures(ime_profesora, prezime_profesora, kolegij, vrsta, dan, sati, prostorija, datum) VALUES (:ime, :prezime, :kolegij, :vrsta, :dan, :sati, :prostorija, " ")' );
 			$st->execute( array('ime' => $lecture->ime_profesora, 'prezime' =>$lecture->prezime_profesora ,'kolegij' => $lecture ->kolegij, 'vrsta' => $lecture -> vrsta, 'dan' => $lecture -> dan, 'sati' => $lecture -> sati, 'prostorija' => $lecture -> prostorija) );
 		}
 		catch( PDOException $e ) {  exit( "PDO error [project_lectures]: " . $e->getMessage() ); }
@@ -206,6 +205,44 @@ class ReservationService
 
 		return $arr;
 	}
+
+	function importLectures($dat)
+	{	
+		if ($file = fopen($dat, "r")) {
+			fgets($file);
+			while(!feof($file)) {
+				$line = fgets($file);	
+			   	$parts = explode(",",$line);
+				if(count($parts) == 8 || count($parts) ==7)
+				{
+					if(count($parts) == 7)
+					{
+						$lecture = new Lecture($parts[0], $parts[1], $parts[2], $parts[3], $parts[4], $parts[5], trim($parts[6], "\n"));
+						$rs = new ReservationService();
+						$rs -> createReservation($lecture);
+					}
+				}
+			}
+			fclose($file);
+		}
+		include __DIR__.'/../data/load.php';
+
+	}
+
+	function removeLectures()
+	{
+		try
+		{
+			$db = DB::getConnection();
+			$start = $start.'-';
+			$st = $db->prepare( "DELETE FROM project_lectures;" );
+
+			$st->execute();
+		}
+		catch( PDOException $e ) {  exit( "PDO error [project_lectures]: " . $e->getMessage() ); }
+	}
+		
+	
 };
 
 

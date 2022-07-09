@@ -16,9 +16,9 @@ class ClassroomsController extends BaseController
 	}
 
     public function showById(){
+
         if ( isset($_GET['id_classroom']) ){
             $rs = new ReservationService();
-
 		    // Popuni template potrebnim podacima
 		    $this->registry->template->title = $_GET['id_classroom'];
 		    $this->registry->template->brojac = 0;

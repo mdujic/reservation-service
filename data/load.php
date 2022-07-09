@@ -6,6 +6,7 @@
 # 2. napraviti sve ovo za zimski semestar (kod mjeseca ne moras uvijek 0 stavljat prije broja)
 #    jer su mjeseci s dvije znamenke 
 
+
 require_once __DIR__ . '/../model/reservationservice.class.php';
 require_once __DIR__ . '/../app/database/db.class.php';
 
@@ -74,7 +75,7 @@ function setAllDates() {
 			}
 			$datum += 7;
 		}
-		print($ukupan_unos);
+		//print($ukupan_unos);
         if(!stavi_u_bazu($ukupan_unos, $lecture->id)){
             print("Doslo je do pogreske");
         }

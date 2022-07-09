@@ -4,7 +4,7 @@ class Lecture
 {
 	protected $id, $ime_profesora, $prezime_profesora, $kolegij, $vrsta, $dan, $sati, $prostorija, $datum;
 
-	function __construct( $ime_profesora, $prezime_profesora, $kolegij, $vrsta, $dan, $sati, $prostorija, $id=-1, $datum)
+	function __construct( $ime_profesora, $prezime_profesora, $kolegij, $vrsta, $dan, $sati, $prostorija, $id=-1, $datum="")
 	{
 		$this->ime_profesora = $ime_profesora;
 		$this->prezime_profesora = $prezime_profesora;
