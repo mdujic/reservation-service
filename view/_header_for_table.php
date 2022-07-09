@@ -13,7 +13,7 @@
     overflow: hidden;
     color: white;">
 		<h1 style="float:left">Rezervacije prostorija (PMF - MO)</h1>
-		<h2 style="float:right">Pozdrav, <?php echo $_SESSION['username']; ?>!</h2>
+		<h2 style="float:right">Pozdrav, <?php echo $_SESSION['username']; ?>! Vaša uloga je: <?php echo $_SESSION['role']; ?>.</h2>
 	</div>
 	
 	<ul>
