@@ -4,6 +4,7 @@ class ScheduleController extends BaseController
 {
 	public function index() 
 	{
+        $this->registry->template->title= 'Unos cijelog novog rasporeda';
 		$this->registry->template->show( 'schedule_index' );
     }
 
