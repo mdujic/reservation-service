@@ -28,7 +28,7 @@ class LecturesController extends BaseController
 		
 		$lectures = [];
 		$zapamtiTip = "";
-		if(strlen($_GET['subject'])> 0)
+		if(strlen($_GET['subject'])>= 0)
 		{
 			foreach($termini as $termin)
 			{
@@ -43,14 +43,20 @@ class LecturesController extends BaseController
 						{
 							$lec->sati = $parts[1]."-".$sat[1];
 							$razlika = (int)$sat[1] - (int)$parts[1];
-							$lec->vrsta = $razlika.$zapamtiTip;
+							if($_GET['tip'] == "predavanja" || $_GET['tip'] == "vjezbe")
+								$lec->vrsta = $razlika.$zapamtiTip;
+							else
+								$lec->vrsta = $zapamtiTip;
 						}
 						if((int)$sat[1] == (int)$parts[1])
 						{
 							$zavrsava = (int)$parts[1] + 1; 
 							$lec->sati = $sat[0]."-".$zavrsava;
 							$razlika = (int)$parts[1] + 1 - (int)$sat[0];
-							$lec->vrsta = $razlika.$zapamtiTip;
+							if($_GET['tip'] == "predavanja" || $_GET['tip'] == "vjezbe")
+								$lec->vrsta = $razlika.$zapamtiTip;
+							else
+								$lec->vrsta = $zapamtiTip;
 						}
 						$find = TRUE;
 						break;
@@ -65,13 +71,29 @@ class LecturesController extends BaseController
 						$tip = "1P";
 						$zapamtiTip = "P";
 					}
-					else
+					else if($_GET['tip'] == "vjezbe")
 					{
 						$zapamtiTip = "V";
 						$tip = "1V";
 					}
+					else if($_GET['tip'] == "dem")
+					{
+						$zapamtiTip = "dem";
+						$tip = "dem";
+					}
+					else if($_GET['tip'] == "sem")
+					{
+						$zapamtiTip = "sem";
+						$tip = "sem";
+					}
+					else
+					{
+						$zapamtiTip = "ost";
+						$tip = "ost";
+					}
 					$datum = $_GET['datum'];
-					$id = 100;
+					
+					$id = 1;
 					$lecture = new Lecture($user->name, $user->surname, $_GET['subject'], $tip, $parts[0], $sati, $_GET['classroom'], $id, $datum);
 					array_push($lectures, $lecture);
 				}
