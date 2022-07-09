@@ -31,9 +31,11 @@
 		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=calendar">Kalendar</a></li>
 		<?php
 			if($_SESSION['role'] == 'satnicar')
+			{
 			?>
 		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=schedule">Novi raspored</a></li>	
 			<?php
+			}
 		?>
 		<li><a href="<?php echo __SITE_URL; ?>/index.php?rt=logout">Odjava</a></li>
 	</ul>
