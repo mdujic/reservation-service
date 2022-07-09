@@ -201,7 +201,6 @@ class ReservationService
 				}else {
 					$final = $new_date . "." . $date[1];
 				}
-				$final .= ';';
 			} else {
 				$final = $lecture->datum . ';';
 			}

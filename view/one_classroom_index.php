@@ -265,7 +265,7 @@
                 else duzi_mjesec = true
                 month++;
             }
-            let dann = $('</br><option value="' + format_date(day, month) + '">' + format_date(day, month) + '</option>');
+            let dann = $('</br><option value="' + format_date(day, month) + ';">' + format_date(day, month) + ';</option>');
             dann.appendTo('#datumi');
             day += 7;
         }
@@ -275,7 +275,7 @@
     {
         var html_tekst = $('<label for="predmet">Predmet: </label><input id="predmet" name="predmet" type="text" />');
         var radio = $('</br><input type="radio" name="odabir" id="predavanja" value="predavanja" checked>Predavanja</input></br><input type="radio" name="odabir" id="vjezbe" value="vjezbe" >Vježbe</input></br><input type="radio" name="odabir" id="dem" value="dem" >Demonstrature</input></br><input type="radio" name="odabir" id="sem" value="sem">Seminar</input></br><input type="radio" name="odabir" id="ost" value="ost">Ostalo</input></br>');
-        var datum = $('<select id="datumi"></select>');
+        var datum = $('<label for="datumi">Odaberi datum rezervacije (drži Ctrl za više odabira): <select id="datumi" multiple></select>');
         var button_unesi = $('</br><button onclick=sendDataToPhp()>Unesi u raspored!</button>');
         html_tekst.appendTo('#unos_u_tablicu');
         radio.appendTo('#unos_u_tablicu');
