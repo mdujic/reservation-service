@@ -28,6 +28,7 @@
 		echo 'Prvi kat:';
 		echo '<table>';
 		echo '<tr>';
+		sort($classroomsList);
 		foreach( $classroomsList as $classroom )
 		{
 			if($classroom[0] === '1' || ($classroom[0] === 'A' && $classroom[1] === '1'))
@@ -46,6 +47,7 @@
 		echo 'Drugi kat'; 
 		echo '<table>';
 		echo '<tr>';
+		sort($classroomsList);
 		foreach( $classroomsList as $classroom )
 		{
 			if($classroom[0] === '2' || ($classroom[0] === 'A' && $classroom[1] === '2'))
@@ -63,6 +65,7 @@
 	echo 'Praktikumi:'; 
 	echo '<table>';
 	echo '<tr>';
+	sort($classroomsList);
 	foreach( $classroomsList as $classroom )
 	{
 		if($classroom[0] === 'P' && $classroom[1] === 'R')
