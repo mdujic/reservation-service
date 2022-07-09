@@ -6,7 +6,7 @@
 <form action = "index.php?rt=schedule/addSchedule" enctype="multipart/form-data" method = "post">
   <label for="myfile">Odaberi datoteku:</label>
   <input type="file" id="myfile" name="myfile"><br><br>
-  <input type="submit">
+  <input type="submit" value = "Izvrši">
 </form>
 
 <script>

@@ -99,8 +99,8 @@
                     var color = $( this ).css( "background-color" );
                     //console.log(color);
                     let d = sad[0] + sad[1] + sad[2];
-                    console.log("sad je ", d, " a sivi dan je " , sivi_dan);
-                    console.log("broj sivih je ", broj_sivih);
+                    //console.log("sad je ", d, " a sivi dan je " , sivi_dan);
+                    //console.log("broj sivih je ", broj_sivih);
                     if((sivi_dan === '' || sivi_dan === d) && (color === 'rgba(0, 0, 0, 0)' || color === 'rgb(255, 255, 255)'))
                     {
                         //console.log("Sada sam tu");
@@ -274,6 +274,7 @@
     function forma_za_unos()
     {
         var html_tekst = $('<label for="predmet">Predmet: </label><input id="predmet" name="predmet" type="text" /></br>');
+        var ime_i_prezime = $('</br><label for = "sime"> Ime: </label><input id = "sime" name = "sime" type = "text"/><label for = "sprez"> Prezime: </label><input id = "sprez" name = "sprez" type = "text"/>');
         var demosi = '</br><input type="radio" name="odabir" id="dem" value="dem" checked >Demonstrature</input></br>';
         var djelatnici = '<input type="radio" name="odabir" id="predavanja" value="predavanja" checked>Predavanja</input></br><input type="radio" name="odabir" id="vjezbe" value="vjezbe" >Vježbe</input></br><input type="radio" name="odabir" id="sem" value="sem">Seminar</input></br><input type="radio" name="odabir" id="ost" value="ost">Ostalo</input>';
         var satnicar = demosi + djelatnici;
@@ -284,13 +285,16 @@
         else if(get_role == 'satnicar') 
             cr = satnicar;
         else cr = djelatnici;
-        console.log('cr = ', cr);
+        //console.log('cr = ', cr);
         var radio = $(cr);
         var datum = $('</br><label for="datumi">Odaberi datum rezervacije (drži Ctrl za više odabira): <select id="datumi" multiple></select>');
         var button_unesi = $('</br><button onclick=sendDataToPhp()>Unesi u raspored!</button>');
         html_tekst.appendTo('#unos_u_tablicu');
+        if(get_role === 'satnicar')
+            ime_i_prezime.appendTo('#unos_u_tablicu');
+        
         radio.appendTo('#unos_u_tablicu');
-        datum.appendTo('#unos_u_tablicu')
+        datum.appendTo('#unos_u_tablicu');
         button_unesi.appendTo('#unos_u_tablicu');
         dodaj_sve_datume();
     }
@@ -302,7 +306,7 @@
 
     function sendDataToPhp()
     {
-        var src = "index.php?rt=lectures/addLecture&termini="+field_id+"&subject="+$('#predmet').val()+"&tip="+$('[name="odabir"]:checked').val() + "&datum=" + $('#datumi option:selected').text() +"&classroom=" +<?php echo json_encode($title); ?>;
+        var src = "index.php?rt=lectures/addLecture&termini="+field_id+"&subject="+$('#predmet').val()+"&tip="+$('[name="odabir"]:checked').val() + "&datum=" + $('#datumi option:selected').text() +"&classroom=" +<?php echo json_encode($title); ?> + "&sime=" + $("#sime").val() + "&sprez=" + $('#sprez').val();
         window.location.href=src;
     }
 

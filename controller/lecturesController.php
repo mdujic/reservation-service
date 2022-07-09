@@ -24,8 +24,14 @@ class LecturesController extends BaseController
 		// Kontroler koji upisuje u raspored 
 		$rs = new ReservationService();
 		$termini = explode(",",$_GET['termini']);
-		$user = $rs -> getUserByUsername($_SESSION['username']);
-		
+		$user = null;
+		if($_SESSION['role'] !== 'satnicar')
+			$user = $rs -> getUserByUsername($_SESSION['username']);
+		else{
+			echo 'dobio sam ' . $_GET['sime'] . ' ' . $_GET['sprez'];
+			$user = $rs -> getUserByUsername($_GET['sime'] . ' ' . $_GET['sprez']);
+		}
+
 		$lectures = [];
 		$zapamtiTip = "";
 		if(strlen($_GET['subject'])>= 0)
